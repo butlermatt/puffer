@@ -25,8 +25,8 @@ class Puffer {
     _myEls = new List();
   }
   
-  PufferLine addPufferLine() {
-    var pl = new PufferLine(this);
+  PufferLine addPufferLine([String color]) {
+    var pl = new PufferLine(this, color);
     _myEls.add(pl);
     return pl;
   }
@@ -43,20 +43,25 @@ class PufferLine {
   s.PolylineElement _line;
   s.PointList _points;
   s.GElement _dots;
+  s.GElement _lineGroup;
   
   List points;
 
-  PufferLine(this.puffer) {
+  PufferLine(this.puffer, String color) {
+    if(color == null) color = 'red';
     _line = new s.PolylineElement()
         ..setAttribute('fill', 'white')
         ..setAttribute('fill-opacity', '0.2')
-        ..setAttribute('stroke', 'red')
+        ..setAttribute('stroke', 'inherit')
         ..setAttribute('stroke-width', '2');
     _points = _line.points;
     _dots = new s.GElement();
     points = new List();
-    puffer.svg.children..add(_line)
-                      ..add(_dots);
+    _lineGroup = new s.GElement()
+        ..setAttribute('stroke', color);
+    _lineGroup.children..add(_line)
+        ..add(_dots);
+    puffer.svg.children.add(_lineGroup);
   }
   
   void addPoint(num xVal, num yVal) {
@@ -89,7 +94,7 @@ class PufferLine {
       
       var circle = new s.CircleElement();
       circle..setAttribute('fill', 'black')
-        ..setAttribute('stroke', 'red')
+        ..setAttribute('stroke', 'inherit')
         ..setAttribute('stroke-width', '1')
         ..setAttribute('r', '3')
         ..setAttribute('cx', '$x')
