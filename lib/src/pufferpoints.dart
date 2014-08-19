@@ -29,8 +29,8 @@ class PufferPoint implements PufferGraph {
   void _calculatePosition() {
     num svgHeight = puffer.height;
     num svgWidth = puffer.width;
-    var x = (xVal - puffer._minX) / puffer._maxX * svgWidth;
-    var y = (yVal - puffer._minY) / puffer._maxY * svgHeight;
+    var x = (xVal - puffer._minX) / (puffer._maxX - puffer._minX) * svgWidth;
+    var y = (yVal - puffer._minY) / (puffer._maxY - puffer._minY) * svgHeight;
     y = svgHeight - y;
     
     _point = puffer.svg.createSvgPoint();
