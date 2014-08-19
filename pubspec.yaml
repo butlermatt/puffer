@@ -1,5 +1,5 @@
 name: puffer
-version: 0.0.1
+version: 0.0.3
 author: Matthew Butler
 description: An SVG-based graphing library. Still in very early development.
 environment:
