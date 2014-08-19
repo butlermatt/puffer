@@ -62,6 +62,7 @@ class PufferPointGraph implements PufferGraph {
   }
   
   void addPoint(xVal, yVal, {String label, String color}) {
+    if(color == null) color = 'inherit';
     var pp = new PufferPoint(puffer, xVal, yVal, label, color);
     points.add(pp);
     _group.children.add(pp.element);

@@ -31,7 +31,7 @@ class PufferLine implements PufferGraph {
   }
   
   void addPoint(num xVal, num yVal, {String label, String color}) {
-    if(color == null) color = this.color;
+    if(color == null) color = 'inherit';
     _dots.addPoint(xVal, yVal, label: label, color: color);
   }
   
