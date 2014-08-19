@@ -2,6 +2,7 @@ library puffer.puffer;
 
 import 'dart:svg' as s;
 
+part 'src/pufferaxis.dart';
 part 'src/pufferline.dart';
 part 'src/pufferpoints.dart';
 
@@ -15,24 +16,25 @@ abstract class PufferGraph {
 
 class Puffer {
   s.SvgSvgElement svg;
-  
-  s.PointList _points;
-  
-  List<PufferGraph> _myEls;
-
   String xAxis;
   String yAxis;
+  
+  s.PointList _points;
+  List<PufferGraph> _myEls;
+  PufferAxis _axis;
   num _maxX = 0;
   num _maxY = 0;
   num _minX = 0;
   num _minY = 0;
-  
   
   Puffer() {
     svg = new s.SvgSvgElement();
     svg.style..width = '100%'
           ..height = '100%';
     _myEls = new List<PufferGraph>();
+    _axis = new PufferAxis(this, null, 'black');
+    _myEls.add(_axis);
+    svg.append(_axis.element);
   }
   
   PufferLine addPufferLine({String label, String color}) {
@@ -45,14 +47,14 @@ class Puffer {
   PufferPointGraph addPufferPointGraph({String label, String color}) {
     var ppg = new PufferPointGraph(this, label, color);
     _myEls.add(ppg);
-    svg.children.add(ppg.element);
+    svg.append(ppg.element);
     return ppg;
   }
   
   PufferPoint addPufferPoint(xVal, yVal, {String label, String color}) {
     var pp = new PufferPoint(this, xVal, yVal, label, color);
     _myEls.add(pp);
-    svg.children.add(pp.element);
+    svg.append(pp.element);
     return pp;
   }
   
