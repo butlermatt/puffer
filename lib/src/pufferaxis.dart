@@ -1,6 +1,6 @@
 part of puffer.puffer;
 
-class PufferAxis implements PufferGraph {
+class _PufferAxis implements PufferGraph {
   final Puffer puffer;
   String label;
   String color;
@@ -11,7 +11,7 @@ class PufferAxis implements PufferGraph {
   s.LineElement _xAxis;
   s.LineElement _yAxis;
   
-  PufferAxis(this.puffer, this.label, this.color) {
+  _PufferAxis(this.puffer, this.label, this.color) {
     if(color == null) color = 'black';
     
     _xAxis = new s.LineElement()
