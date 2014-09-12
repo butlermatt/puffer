@@ -103,12 +103,18 @@ class Puffer {
   }
 
   /// Returns the width of the SVG Element
-  num get width => svg.getBoundingClientRect().width;
+  num get svgWidth => svg.getBoundingClientRect().width;
   /// Returns the Height of the SVG Element.
-  num get height => svg.getBoundingClientRect().height;
+  num get svgHeight => svg.getBoundingClientRect().height;
+  
+  num get height => svgHeight - (svgHeight * 0.10); // 10% of the height
+  num get width => svgWidth - (svgWidth * 0.10); // 10% of the width
+  
+  num get yOffset => 0; // No offset because it starts from the top
+  num get xOffset => svgWidth * 0.10; // 10% buffer space.
 
-  /// This method calculates the correct position of all elements on the
-  /// graph and displays them.
+  /// Calculate the correct position of all elements on the graph and
+  /// display them.
   void draw() => _myEls.forEach((el) => el._calculatePosition());
 
 }

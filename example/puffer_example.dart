@@ -16,8 +16,8 @@ void main() {
     ..addPoint(8, 100);
 
   var line2 = puffer.addPufferLine(color: 'blue');
-  line2..addPoint(0, 18)
-    ..addPoint(3, 32)
+  line2..addPoint(0, -18)
+    ..addPoint(3, 18)
     ..addPoint(4, 58, color: 'green')
     ..addPoint(5, 67)
     ..addPoint(9, 7);
