@@ -9,7 +9,7 @@ void main() {
   container.append(puffer.svg);
 
   var line = puffer.addPufferLine();
-  line..addPoint(0, 25)
+  line..addPoint(-3, 25)
     ..addPoint(2, 50)
     ..addPoint(4, 50)
     ..addPoint(6, 75)

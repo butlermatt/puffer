@@ -5,35 +5,50 @@ class _PufferAxis implements PufferGraph {
   String label;
   String color;
   
-  s.SvgElement get element => _axis;
+  s.SvgElement get element => _element;
   
   s.GElement _axis;
+  s.GElement _graphBorder;
+  s.GElement _labels;
+  s.GElement _chartLines; // Maybe?
+  s.GElement _element;
   s.LineElement _xAxis; // Actual x axis 
   s.LineElement _yAxis;
   s.LineElement _xGraphAxis;
   s.LineElement _yGraphAxis;
   
+  var _gStartX;
+  var _gStartY;
+  var _gEndX;
+  var _gEndY;
+  
   _PufferAxis(this.puffer, this.label, this.color) {
     if(color == null) color = 'black';
+    _element = new s.GElement();
     
     _xAxis = new s.LineElement()
-        ..setAttribute('stroke', 'inherit')
-        ..setAttribute('stroke-width', '1');
-    _xGraphAxis = new s.LineElement()
         ..setAttribute('stroke', 'inherit')
         ..setAttribute('stroke-width', '1');
     _yAxis = new s.LineElement()
         ..setAttribute('stroke', 'inherit')
         ..setAttribute('stroke-width', '1');
-    _yGraphAxis = new s.LineElement()
-        ..setAttribute('stroke', 'inherit')
-        ..setAttribute('stroke-width', '1');
     _axis = new s.GElement()
         ..setAttribute('stroke', color)
         ..append(_xAxis)
+        ..append(_yAxis);
+    _xGraphAxis = new s.LineElement()
+        ..setAttribute('stroke', 'inherit')
+        ..setAttribute('stroke-width', '.5');
+    _yGraphAxis = new s.LineElement()
+        ..setAttribute('stroke', 'inherit')
+        ..setAttribute('stroke-width', '.5');
+    _graphBorder = new s.GElement()
+        ..setAttribute('stroke', 'black')
         ..append(_xGraphAxis)
-        ..append(_yAxis)
         ..append(_yGraphAxis);
+    _element = new s.GElement()
+        ..append(_graphBorder)
+        ..append(_axis);
   }
   
   void _calculatePosition() {
@@ -41,38 +56,52 @@ class _PufferAxis implements PufferGraph {
     num svgWidth = puffer.svgWidth;
     num graphHeight = puffer.height; // 10% of the height
     num graphWidth = puffer.width; // 10% of the width
+    
+    _gStartX = puffer.graphStartX;
+    _gStartY = puffer.graphStartY;
+    _gEndX = puffer.graphEndX;
+    _gEndY = puffer.graphEndY;
 
+    _calculateGraphAxis();
+    _calculateXYAxis();
+
+  }
+
+  
+  void _calculateGraphAxis() {
+    _xGraphAxis..setAttribute('x1', '$_gStartX')
+        ..setAttribute('x2', '$_gEndX')
+        ..setAttribute('y1', '$_gEndY')
+        ..setAttribute('y2', '$_gEndY');
     
-    var x = (0 - puffer._minX) / (puffer._maxX - puffer._minX) * graphWidth;
-    x += puffer.xOffset;
-    var y = (0 - puffer._minY) / (puffer._maxY - puffer._minY) * graphHeight;
-    y = graphHeight - y;
+    _yGraphAxis..setAttribute('y1', '$_gStartY')
+        ..setAttribute('y2', '$_gEndY')
+        ..setAttribute('x1', '$_gStartX')
+        ..setAttribute('x2', '$_gStartX');
+  }
+
+  void _calculateXYAxis() {
+    var y0 = (0 - puffer._minY) / (puffer._maxY - puffer._minY) * puffer.height;
+    y0 = puffer.height - y0;
     
-    _xGraphAxis..setAttribute('x1', '${puffer.xOffset}')
-        ..setAttribute('x2', '$svgWidth')
-        ..setAttribute('y1', '$graphHeight')
-        ..setAttribute('y2', '$graphHeight');
-    
-    _yGraphAxis..setAttribute('y1', '0')
-        ..setAttribute('y2', '$graphHeight')
-        ..setAttribute('x1', '${puffer.xOffset}')
-        ..setAttribute('x2', '${puffer.xOffset}');
-    
-    if(puffer._minY != 0) {
-      _xAxis..setAttribute('x1', '${puffer.xOffset}')
-          ..setAttribute('x2', '$svgWidth')
-          ..setAttribute('y1', '$y')
-          ..setAttribute('y2', '$y');
+    if(puffer._minY != 0) { // X axis raise/lower depending on min Y value
+      _xAxis..setAttribute('x1', '$_gStartX')
+          ..setAttribute('x2', '$_gEndX')
+          ..setAttribute('y1', '$y0')
+          ..setAttribute('y2', '$y0');
     } else {
       // Would be same position as Graph axis. Just remove it.
       _xAxis.remove();
     }
 
+    var x0 = (0 - puffer._minX) / (puffer._maxX - puffer._minX) * puffer.width;
+    x0 += _gStartX;
+    
     if(puffer._minX != 0) {
-      _yAxis..setAttribute('y1', '0')
-          ..setAttribute('y2', '$graphHeight')
-          ..setAttribute('x1', '$x')
-          ..setAttribute('x2', '$x');
+      _yAxis..setAttribute('y1', '$_gStartY')
+          ..setAttribute('y2', '$_gEndY')
+          ..setAttribute('x1', '$x0')
+          ..setAttribute('x2', '$x0');
     } else {
       // Would be same position as Graph axis, just remove it.
       _yAxis.remove();

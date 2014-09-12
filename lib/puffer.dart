@@ -112,6 +112,11 @@ class Puffer {
   
   num get yOffset => 0; // No offset because it starts from the top
   num get xOffset => svgWidth * 0.10; // 10% buffer space.
+  
+  num get graphStartX => svgWidth * 0.10;
+  num get graphStartY => 0;
+  num get graphEndX => svgWidth;
+  num get graphEndY => svgHeight - (svgHeight * 0.10);
 
   /// Calculate the correct position of all elements on the graph and
   /// display them.
