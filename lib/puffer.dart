@@ -30,7 +30,7 @@ class Puffer {
   /// The Svg image that the graphs will be composed onto. Should be inserted
   /// into the container prior to calling [draw].
   final s.SvgSvgElement svg;
-
+  
   s.PointList _points;
   List<PufferGraph> _myEls;
   _PufferAxis _axis;
@@ -40,11 +40,11 @@ class Puffer {
   num _minY = 0;
 
   /// Create a new Puffer instance.
-  Puffer() : svg = new s.SvgSvgElement() {
+  Puffer({hGridlines: true}) : svg = new s.SvgSvgElement() {
     svg.style..width = '100%'
           ..height = '100%';
     _myEls = new List<PufferGraph>();
-    _axis = new _PufferAxis(this, null, 'black');
+    _axis = new _PufferAxis(this, null, 'black', hGridlines);
     _myEls.add(_axis);
     svg.append(_axis.element);
     svg.onResize.listen((_) { print('Drawing'); draw(); });
