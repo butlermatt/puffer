@@ -1,3 +1,7 @@
+### September 16th, 2014 (v0.0.5)
+* Added option to addPufferLine to display points in line graph
+* Defaults to false.
+
 ### September 16th, 2014 (v0.0.4)
 * Added labels along x/y axis
 * Optional display horizontal gridlines
