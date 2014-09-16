@@ -13,11 +13,10 @@ void main() {
     ..addPoint(2, 50)
     ..addPoint(4, 50)
     ..addPoint(6, 75)
-    ..addPoint(8, 100)
-    ..addPoint(15, 150);
+    ..addPoint(8, 100);
 
-  var line2 = puffer.addPufferLine(color: 'blue');
-  line2//..addPoint(0, -18)
+  var line2 = puffer.addPufferLine(color: 'blue', pointsVisible: true);
+  line2..addPoint(0, -18)
     ..addPoint(3, 18)
     ..addPoint(4, 58, color: 'green')
     ..addPoint(5, 67)

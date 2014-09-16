@@ -69,14 +69,13 @@ class _PufferAxis implements PufferGraph {
   
   void _calculateGraphAxis() {
     _xGraphAxis..setAttribute('x1', '$_gStartX')
-        ..setAttribute('x2', '$_gEndX')
+        ..setAttribute('x2', '${puffer.svgWidth}')
         ..setAttribute('y1', '$_gEndY')
         ..setAttribute('y2', '$_gEndY');
   }
 
   void _calculateXYAxis() {
-    var y0 = (0 - puffer._minY) / (puffer._maxY - puffer._minY) * puffer.height;
-    y0 = puffer.height - y0;
+    var y0 = _calcYPos(0);
     
     if(puffer._minY != 0) { // X axis raise/lower depending on min Y value
       _xAxis..setAttribute('x1', '$_gStartX')
@@ -88,11 +87,10 @@ class _PufferAxis implements PufferGraph {
       _xAxis.remove();
     }
 
-    var x0 = (0 - puffer._minX) / (puffer._maxX - puffer._minX) * puffer.width;
-    x0 += _gStartX;
+    var x0 = _calcXPos(0);
     
     if(puffer._minX != 0) {
-      _yAxis..setAttribute('y1', '$_gStartY')
+      _yAxis..setAttribute('y1', '0')
           ..setAttribute('y2', '$_gEndY')
           ..setAttribute('x1', '$x0')
           ..setAttribute('x2', '$x0');
@@ -181,7 +179,7 @@ class _PufferAxis implements PufferGraph {
             ..setAttribute('y1', '$py')
             ..setAttribute('y2', '$py')
             ..setAttribute('x1', '${puffer.graphStartX}')
-            ..setAttribute('x2', '${puffer.graphEndX}');
+            ..setAttribute('x2', '${puffer.svgWidth}');
         _graphBorder.append(line);
       }
       
@@ -203,7 +201,7 @@ class _PufferAxis implements PufferGraph {
             ..setAttribute('y1', '$py')
             ..setAttribute('y2', '$py')
             ..setAttribute('x1', '${puffer.graphStartX}')
-            ..setAttribute('x2', '${puffer.graphEndX}');
+            ..setAttribute('x2', '${puffer.svgWidth}');
         _graphBorder.append(line);
       }
       
@@ -221,7 +219,7 @@ class _PufferAxis implements PufferGraph {
   // Calculate the pixel x coordinates based on x-graph value
   num _calcXPos(num xVal) {
     var x = (xVal - puffer._minX) / (puffer._maxX - puffer._minX) * puffer.width;
-    x += puffer.xOffset;
+    x += puffer.graphStartX;
     return x;
   }
   
@@ -229,7 +227,7 @@ class _PufferAxis implements PufferGraph {
   num _calcYPos(num yVal) {
     num y = (yVal - puffer._minY) / (puffer._maxY - puffer._minY) *
             puffer.height;
-    y = (puffer.height - y) + puffer.yOffset;
+    y = (puffer.height - y) + puffer.graphStartY;
     return y;
   }
   

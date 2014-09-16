@@ -58,10 +58,12 @@ class Puffer {
    * If [color] is specified, the line graph will be displayed with that
    * color. You may use valid CSS color values. (eg: 'black',
    * 'rgb(255, 128, 0)', '#f7b', '#f8295a'). Default is 'red'
+   * If [pointsVisible] is set to true, then the points which make up the
+   * line graph will be displayed. Defaults to false.
    *  This method returns a [PufferLine] object to which points may be added.
    */  
-  PufferLine addPufferLine({String label, String color}) {
-    var pl = new PufferLine(this, label, color);
+  PufferLine addPufferLine({String label, String color, pointsVisible: false}) {
+    var pl = new PufferLine(this, label, color, pointsVisible: pointsVisible);
     _myEls.add(pl);
     svg.children.add(pl.element);
     return pl;
@@ -107,15 +109,12 @@ class Puffer {
   /// Returns the Height of the SVG Element.
   num get svgHeight => svg.getBoundingClientRect().height;
   
-  num get height => svgHeight - (svgHeight * 0.10); // 10% of the height
-  num get width => svgWidth - (svgWidth * 0.10); // 10% of the width
-  
-  num get yOffset => 0; // No offset because it starts from the top
-  num get xOffset => svgWidth * 0.10; // 10% buffer space.
+  num get height => svgHeight - (svgHeight * 0.10) - 5; // 10% of the height
+  num get width => svgWidth - (svgWidth * 0.10) - 5; // 10% of the width
   
   num get graphStartX => svgWidth * 0.10;
-  num get graphStartY => 0;
-  num get graphEndX => svgWidth;
+  num get graphStartY => 5;
+  num get graphEndX => svgWidth - 5;
   num get graphEndY => svgHeight - (svgHeight * 0.10);
 
   /// Calculate the correct position of all elements on the graph and

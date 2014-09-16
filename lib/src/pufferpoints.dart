@@ -10,6 +10,9 @@ class PufferPoint implements PufferGraph {
   final xVal;
   /// Value on the Y-axis of this point.
   final yVal;
+  
+  /// If the point should be visible on the graph.
+  bool visible = true;
 
   /// The composed SVG element displayed on the graph.
   s.SvgElement get element => _circle;
@@ -19,7 +22,7 @@ class PufferPoint implements PufferGraph {
 
   /// Creates a new instance of [PufferPoint]. Should not be instantiated
   /// directly.
-  PufferPoint(this._puffer, this.xVal, this.yVal, this.label, String color) {
+  PufferPoint(this._puffer, this.xVal, this.yVal, this.label, String color, {this.visible}) {
     if (xVal > _puffer._maxX) _puffer._maxX = xVal;
     if (xVal < _puffer._minX) _puffer._minX = xVal;
 
@@ -34,17 +37,16 @@ class PufferPoint implements PufferGraph {
         ..setAttribute('stroke', color)
         ..setAttribute('stroke-width', '2')
         ..setAttribute('r', '3');
+    if(!visible) {
+      _circle.setAttribute('visibility', 'hidden');
+    }
   }
 
   void _calculatePosition() {
     num graphHeight = _puffer.height;
     num graphWidth = _puffer.width;
-    var x = (xVal - _puffer._minX) / (_puffer._maxX - _puffer._minX) * graphWidth;
-    var y =
-        (yVal - _puffer._minY) / (_puffer._maxY - _puffer._minY) *
-        graphHeight;
-    y = (graphHeight - y) + _puffer.yOffset;
-    x += _puffer.xOffset;
+    var x = _calcXPos(xVal);
+    var y = _calcYPos(yVal);
 
     _point = _puffer.svg.createSvgPoint();
     _point.x = x;
@@ -52,6 +54,21 @@ class PufferPoint implements PufferGraph {
     _circle
         ..setAttribute('cx', '$x')
         ..setAttribute('cy', '$y');
+  }
+  
+  // Calculate the pixel x coordinates based on x-graph value
+  num _calcXPos(num xVal) {
+    var x = (xVal - _puffer._minX) / (_puffer._maxX - _puffer._minX) * _puffer.width;
+    x += _puffer.graphStartX;
+    return x;
+  }
+  
+// Calculate the pixel y coordinates based on y-graph value
+  num _calcYPos(num yVal) {
+    num y = (yVal - _puffer._minY) / (_puffer._maxY - _puffer._minY) *
+            _puffer.height;
+    y = (_puffer.height - y) + _puffer.graphStartY;
+    return y;
   }
 
   /// Throws an [UnsupportedError]. Unable to add a point a point.
@@ -86,9 +103,14 @@ class PufferPointGraph implements PufferGraph {
   /// [label] will display the provided string when hovering over the point on
   /// the graph. The optional, named, parameter [color] specifies the color
   /// of this point. Default is inherited from the point graph.
-  void addPoint(xVal, yVal, {String label, String color}) {
+  void addPoint(xVal, yVal, {String label, String color, bool visible}) {
     if (color == null) color = 'inherit';
-    var pp = new PufferPoint(puffer, xVal, yVal, label, color);
+    var pp;
+    if(visible != null) {
+      pp = new PufferPoint(puffer, xVal, yVal, label, color, visible: visible);
+    } else {
+      pp = new PufferPoint(puffer, xVal, yVal, label, color);
+    }
     points.add(pp);
     _group.children.add(pp.element);
   }

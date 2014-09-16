@@ -12,6 +12,8 @@ class PufferLine implements PufferGraph {
   /// Color of the line graph.
   String color;
   
+  bool pointsVisible = true;
+  
   /// The composed SVG element displayed on the graph.
   s.SvgElement get element => _lineGroup;
   
@@ -22,7 +24,7 @@ class PufferLine implements PufferGraph {
 
   /// Creates a new instance of [PufferLine]. Should not be instantiated
   /// directly.
-  PufferLine(this._puffer, this.label, this.color) {
+  PufferLine(this._puffer, this.label, this.color, {this.pointsVisible}) {
     if(color == null) color = 'red';
     _lineGroup = new s.GElement()
         ..setAttribute('stroke', color);
@@ -47,7 +49,7 @@ class PufferLine implements PufferGraph {
   /// of this point. Default is inherited from the line graph.  
   void addPoint(num xVal, num yVal, {String label, String color}) {
     if(color == null) color = 'inherit';
-    _dots.addPoint(xVal, yVal, label: label, color: color);
+    _dots.addPoint(xVal, yVal, label: label, color: color, visible: pointsVisible);
   }
   
   void _calculatePosition() {
